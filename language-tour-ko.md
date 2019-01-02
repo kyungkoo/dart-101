@@ -96,3 +96,106 @@ main() {
 -   다트는 *표현식*(런타임 값을 갖는)과 *명령문*(값을 갖지 않는)을 모두 지원한다. 예를 들어, [조건 표현식](#conditional-expressions)인 `condition ? expr1 : expr2`는 `expr1` 또는 `expr2` 중 하나의 값을 갖는다. 값을 갖지 않는 [if-else 문](#if-and-else)과 비교해 보도록 하자. 명령문은 종종 하나 이상의 표현식을 포함하는 반면, 표현식은 명령문을 직접적으로 포함할 수 없다.
 
 -   다트 도구는 _warnings_ and _errors_ 이렇게 두 종류의 문제를 보고할 수 있다. 경고는 단지 코드가 정상적으로 동작하지 않을 수 있다는 것을 나타내며, 프로그램이 실행되는것을 막지는 않는다. 에러는 컴파일 에러나 런타임 에러가 될 수 있다. 컴파일 타임 에러는 코드가 실행되는 것을 막는다. 런타임 에러는 코드가 실행되는 동안 [예외](#exceptions)을 발생시킨다.
+
+
+## Keywords
+
+아래는 다트 언어에서 특별하게 취급하는 단어를 표로 나타냈다.
+
+{% assign ckw = '&nbsp;<sup title="contextual keyword" alt="contextual keyword">1</sup>' %}
+{% assign bii = '&nbsp;<sup title="built-in-identifier" alt="built-in-identifier">2</sup>' %}
+{% assign lrw = '&nbsp;<sup title="limited reserved word" alt="limited reserved word">3</sup>' %}
+| [abstract][]{{bii}}   | [dynamic][]{{bii}}    | [implements][]{{bii}} | [show][]{{ckw}}   |
+| [as][]{{bii}}         | [else][]              | [import][]{{bii}}     | [static][]{{bii}} |
+| [assert][]            | [enum][]              | [in][]                | [super][]         |
+| [async][]{{ckw}}      | [export][]{{bii}}     | [interface][]{{bii}}  | [switch][]        |
+| [await][]{{lrw}}      | [extends][]           | [is][]                | [sync][]{{ckw}}   |
+| [break][]             | [external][]{{bii}}   | [library][]{{bii}}    | [this][]          |
+| [case][]              | [factory][]{{bii}}    | [mixin][]{{bii}}      | [throw][]         |
+| [catch][]             | [false][]             | [new][]               | [true][]          |
+| [class][]             | [final][]             | [null][]              | [try][]           |
+| [const][]             | [finally][]           | [on][]{{ckw}}         | [typedef][]{{bii}}|
+| [continue][]          | [for][]               | [operator][]{{bii}}   | [var][]           |
+| [covariant][]{{bii}}  | [Function][]{{bii}}   | [part][]{{bii}}       | [void][]          |
+| [default][]           | [get][]{{bii}}        | [rethrow][]           | [while][]         |
+| [deferred][]{{bii}}   | [hide][]{{ckw}}       | [return][]            | [with][]          |
+| [do][]                | [if][]                | [set][]{{bii}}        | [yield][]{{lrw}}  |
+{:.table .table-striped .nowrap}
+
+[abstract]: #abstract-classes
+[as]: #type-test-operators
+[assert]: #assert
+[async]: #asynchrony-support
+[await]: #asynchrony-support
+[break]: #break-and-continue
+[case]: #switch-and-case
+[catch]: #catch
+[class]: #instance-variables
+[const]: #final-and-const
+{% comment %}
+  [TODO: Make sure that points to a place that talks about const constructors,
+  as well as const literals and variables.]
+{% endcomment %}
+[continue]: #break-and-continue
+[covariant]: /guides/language/sound-problems#the-covariant-keyword
+[default]: #switch-and-case
+[deferred]: #lazily-loading-a-library
+[do]: #while-and-do-while
+[dynamic]: #important-concepts
+[else]: #if-and-else
+[enum]: #enumerated-types
+[export]: /guides/libraries/create-library-packages
+[extends]: #extending-a-class
+[external]: https://stackoverflow.com/questions/24929659/what-does-external-mean-in-dart
+[factory]: #factory-constructors
+[false]: #booleans
+[final]: #final-and-const
+[finally]: #finally
+[for]: #for-loops
+[Function]: #functions
+[get]: #getters-and-setters
+[hide]: #importing-only-part-of-a-library
+[if]: #if-and-else
+[implements]: #implicit-interfaces
+[import]: #using-libraries
+[in]: #for-loops
+[interface]: https://stackoverflow.com/questions/28595501/was-the-interface-keyword-removed-from-dart
+[is]: #type-test-operators
+[library]: #libraries-and-visibility
+[mixin]: #adding-features-to-a-class-mixins
+[new]: #using-constructors
+[null]: #default-value
+[on]: #catch
+[operator]: #overridable-operators
+[part]: /guides/libraries/create-library-packages#organizing-a-library-package
+[rethrow]: #catch
+[return]: #functions
+[set]: #getters-and-setters
+[show]: #importing-only-part-of-a-library
+[static]: #class-variables-and-methods
+[super]: #extending-a-class
+[switch]: #switch-and-case
+[sync]: #generators
+[this]: #constructors
+[throw]: #throw
+[true]: #booleans
+[try]: #catch
+[typedef]: #typedefs
+[var]: #variables
+[void]: https://medium.com/dartlang/dart-2-legacy-of-the-void-e7afb5f44df0
+{% comment %}
+  TODO: Add coverage of void to the language tour.
+{% endcomment %}
+[with]: #adding-features-to-a-class-mixins
+[while]: #while-and-do-while
+[yield]: #generators
+
+이러한 단어를 식별자로 사용하는 것은 피하도록 한다. 그러나, 첨자가 표시된 키워드는 필요에 따라 식별자로 사용할 수 있다.
+
+* 첨자 **1**이 표시된 단어는 **contextual keywords**로, 특정 위치에서만 의미를 갖는다. 이들 키워드는 어느곳에서나 유효한 식별자가 된다.
+
+* 첨자 **2**가 표시된 단어는 **built-in identifiers**다. 이는 자바스크립트 코드를 다트로 포팅하는 작업을 단순화 하기 위함으로, 이러한 키워드는 대부분에서 유효한 식별자가 되지만, 클래스나 타입명 또는 임포트의 접두사로는 사용할 수 없다.
+
+* 첨자 **3**이 표시된 단어는 다트 1.0 릴리즈 이후 추가된 [asynchrony support](#asynchrony-support)와 관련이 있는 새로 도입된 제한된 예약어다. `async`, `async*`, 또는 `sync*`로 표시된 함수에는 `await` 나 `yield`를 식별자로 사용할 수 없다.
+
+표에 있는 나머지 모든 단어는 **예약어**로, 이러한 단어는 식별자가 될 수 없다.
