@@ -199,3 +199,54 @@ main() {
 * 첨자 **3**이 표시된 단어는 다트 1.0 릴리즈 이후 추가된 [asynchrony support](#asynchrony-support)와 관련이 있는 새로 도입된 제한된 예약어다. `async`, `async*`, 또는 `sync*`로 표시된 함수에는 `await` 나 `yield`를 식별자로 사용할 수 없다.
 
 표에 있는 나머지 모든 단어는 **예약어**로, 이러한 단어는 식별자가 될 수 없다.
+
+
+## Variables
+
+다음은 변수를 생성하고 초기화 하는 예제이다.
+
+<?code-excerpt "misc/lib/language_tour/variables.dart (var-decl)"?>
+{% prettify dart %}
+var name = 'Bob';
+{% endprettify %}
+
+변수는 참조를 저장한다. `name` 이라는 이름의 변수는 "Bob" 이라는 값을 가진 `String` 객체의 참조를 포함한다.
+
+`name` 변수의 타입은 `String` 으로 추론 되지만, 타입을 명시하면 이를 변경할 수 있다. 객체를 단일 타입으로 한정짓고 싶지 않다면, 타입을 `Object` 나 `dynamic` 으로 명시하며, 이와 관련된 내용은 [design guidelines][ObjectVsDynamic] 을 참고하도록 한다.
+
+{% comment %}
+**[PENDING: check on Object vs. dynamic guidance.]**
+{% endcomment %}
+
+<?code-excerpt "misc/lib/language_tour/variables.dart (type-decl)"?>
+{% prettify dart %}
+dynamic name = 'Bob';
+{% endprettify %}
+
+또 다른 선택지로는 참조될 타입을 명시적으로 선언하는 방법이 있다.
+
+<?code-excerpt "misc/lib/language_tour/variables.dart (static-types)"?>
+{% prettify dart %}
+String name = 'Bob';
+{% endprettify %}
+
+<div class="alert alert-info" markdown="1">
+**Note:**
+이 페이지에서는 로컬 변수를 선언함에 있어 타입 어노테이션보다는 `var` 를 사용함으로써 [style guide recommendation](/guides/language/effective-dart/design#types)의 내용을 따른다.
+</div>
+
+
+### Default value
+
+초기화 되지않은 변수는 초깃값으로 `null`을 갖는다. 심지어 숫자 타입의 변수 역시 초기에는 null을 갖는데, 이는 숫자를 포함한 다트의 모든 값은 객체이기 때문이다.
+
+<?code-excerpt "misc/test/language_tour/variables_test.dart (var-null-init)"?>
+{% prettify dart %}
+int lineCount;
+assert(lineCount == null);
+{% endprettify %}
+
+<div class="alert alert-info" markdown="1">
+**Note:**
+출시되는 코드에서는 `assert()` 호출이 무시된다. 개발 버전에서 <code>assert(<em>condition</em>)</code> 코드는 *‌조건*이 참이 아닌 경우 예외를 발생시킨다. 자세한 사항은 [Assert](#assert)을 참고하도록 한다.
+</div>
