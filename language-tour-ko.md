@@ -250,3 +250,70 @@ assert(lineCount == null);
 **Note:**
 출시되는 코드에서는 `assert()` 호출이 무시된다. 개발 버전에서 <code>assert(<em>condition</em>)</code> 코드는 *‌조건*이 참이 아닌 경우 예외를 발생시킨다. 자세한 사항은 [Assert](#assert)을 참고하도록 한다.
 </div>
+
+
+### Final and const
+
+변수를 변경할 의도가 전혀 없다면 `var` 나 그 외 타입을 사용하는 대신, `final` 이나 `const` 를 사용하도록 하자. final 변수는 오직 한번만 값을 설정할 수 있다. const 변수는 컴파일 타임 상수이다(const 변수는 암묵적으로 final 이 된다.). 최 상위 래벨 final 변수나 final 클래스 변수는 해당 변수를 처음 사용할 때 초기화된다.
+
+<div class="alert alert-info" markdown="1">
+**Note:**
+Instance variables can be `final` but not `const`.
+Final instance variables must be initialized before
+the constructor body starts —
+at the variable declaration, by a constructor parameter,
+or in the constructor's [initializer list](#initializer-list).
+</div>
+
+다음은 final 변수 생성과 설정에 관한 예제다.
+
+<?code-excerpt "misc/lib/language_tour/variables.dart (final)"?>
+{% prettify dart %}
+final name = 'Bob'; // Without a type annotation
+final String nickname = 'Bobby';
+{% endprettify %}
+
+final 변수는 값을 변경할 수 없다.
+
+{:.fails-sa}
+<?code-excerpt "misc/lib/language_tour/variables.dart (cant-assign-to-final)"?>
+{% prettify dart %}
+name = 'Alice'; // Error: a final variable can only be set once.
+{% endprettify %}
+
+변수가 **컴파일 타임 상수**로 되길 바란다면 `const`를 사용하자. const 변수가 클래스 래벨에 선언되어 있다면, 변수를 `static const`로 선언하도록 한다. 변수를 선언할 때에는 숫자나 문자열 리터럴과 같은 컴파일 타임 상수나 const 변수 또는 상수 숫자에 대한 산술 연산의 결과를 값으로 설정한다.
+
+<?code-excerpt "misc/lib/language_tour/variables.dart (const)"?>
+{% prettify dart %}
+const bar = 1000000; // Unit of pressure (dynes/cm2)
+const double atm = 1.01325 * bar; // Standard atmosphere
+{% endprettify %}
+
+`const` 키위드는 단지 const 변수를 선언하기 위함만은 아니다. 상수 _값_ 을 생성하는 것은 물론 상수 값을 _생성_ 하는 생성자를 선언하는 데에도 `const` 키워드를 사용할 수 있다.
+
+<?code-excerpt "misc/lib/language_tour/variables.dart (const-vs-final)"?>
+{% prettify dart %}
+var foo = const [];
+final bar = const [];
+const baz = []; // Equivalent to `const []`
+{% endprettify %}
+
+위에서 살펴본 `baz` 처럼 `const` 을 선언하는 초기화 표현식에서는 `const` 를 생략할 수 있다. 자세한 내용은 [DON’T use const redundantly][] 을 살펴보도록 한다.
+
+const 값을 가지고 있다고 하더라도 final 이나 const 변수가 아닌 값은 값을 변경할 수 있다.
+
+<?code-excerpt "misc/lib/language_tour/variables.dart (reassign-to-non-final)"?>
+{% prettify dart %}
+foo = [1, 2, 3]; // Was const []
+{% endprettify %}
+
+const 변수의 값은 변경할 수 없다.
+
+{:.fails-sa}
+<?code-excerpt "misc/lib/language_tour/variables.dart (cant-assign-to-const)"?>
+{% prettify dart %}
+baz = [42]; // Error: Constant variables can't be assigned a value.
+{% endprettify %}
+
+상수 값을 생성하기 위해 `const` 를 사용하는데 있어 더 자세한 정보를 얻고자 한다면 [Lists](#lists), [Maps](#maps), and [Classes](#classes) 를 살펴보도록 하자.
+
