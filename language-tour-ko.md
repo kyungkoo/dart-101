@@ -317,3 +317,112 @@ baz = [42]; // Error: Constant variables can't be assigned a value.
 
 상수 값을 생성하기 위해 `const` 를 사용하는데 있어 더 자세한 정보를 얻고자 한다면 [Lists](#lists), [Maps](#maps), and [Classes](#classes) 를 살펴보도록 하자.
 
+
+## Built-in types
+
+다트 언어는 다음 타입은 특별하게 취급한다.
+
+- numbers
+- strings
+- booleans
+- lists (*배열*로도 알려져있다)
+- maps
+- runes (문자열에서 유니코드 문자를 나타내기 위함)
+- symbols
+
+이러한 특별한 타입의 객체는 리터럴을 사용하여 초기화 할 수 있다. 예를 들어, `'this is a string'` 은 문자열 리터럴이며 `true` 는 불리언 리터럴이다.
+
+{% comment %}
+PENDING: add info about support for Iterable, Future, Stream?
+Those can't be initialized using literals, but they do have special support.
+{% endcomment %}
+
+다트의 모든 변수는 *클래스*의 인스턴스인 객체를 참조하고 있기 때문에, 보통은 *생성자* 를 사용하여 변수를 초기화 한다. 일부 내장 타입은 자신만의 생성자를 갖는다. 예를 들어, 맵을 생성할 때에는 `Map()` 생성자를 사용한다.
+
+### Numbers
+
+다트 숫자에는 두 종류가 있다.
+
+[int][]
+
+:   플랫폼에 따라 정수 값은 64 비트 보다 클 수 없다. 다트 VM에서는 -2<sup>63</sup> to 2<sup>63</sup> - 1 의 값을 가질 수 있다. 자바스크립트로 컴파일된 다트의 경우에는 [자바스크립트 number][js numbers]를 사용하며, -2<sup>53</sup> to 2<sup>53</sup> - 1 의 값을 허용한다.
+
+{% comment %}
+[PENDING: What about values on Android & iOS?
+The informal spec is at
+https://github.com/dart-lang/sdk/blob/master/docs/language/informal/int64.md.
+{% endcomment %}
+
+[double][]
+
+:   IEEE 754 표준에 명시된 64-비트 (배정밀도) 부동 소수점 숫자다.
+
+`int` 와 `double` 모두 [`num`][num]의 서브타입이다. num 타입은 +, -, /, \* 와 같은 기본 연산자를 포함하며, 다른 메소드로는 `abs()`,` ceil()`, `floor()` 에서 발견할 수 있을 것이다. (\>\> 와 같은 비트 연산자는 `int` 클래스에 정의되어 있다.) num 과 num 의 서브타입에는 여러분이 찾고자 하는것이 없으며, [dart:math][] 에 아마 찾고자 하는 것들이 있을 것이다.
+
+정수에는 소수점이 없다. 다음은 정수 리터럴을 정의하는 몇 가지 예제다.
+
+<?code-excerpt "misc/lib/language_tour/built_in_types.dart (integer-literals)"?>
+{% prettify dart %}
+var x = 1;
+var hex = 0xDEADBEEF;
+{% endprettify %}
+
+숫자가 소수점을 포함한다면 이는 double이 된다. 다음은 실수 리터럴을 정의하는 몇 가지 예제다.
+
+<?code-excerpt "misc/lib/language_tour/built_in_types.dart (double-literals)"?>
+{% prettify dart %}
+var y = 1.1;
+var exponents = 1.42e5;
+{% endprettify %}
+
+다트 2.1 부터, 정수 리터럴은 필요에 따라 실수로 자동 변환된다.
+
+<?code-excerpt "misc/lib/language_tour/built_in_types.dart (int-to-double)"?>
+{% prettify dart %}
+double z = 1; // Equivalent to double z = 1.0.
+{% endprettify %}
+
+<aside class="alert alert-info" markdown="1">
+  **Version note:**
+  Before Dart 2.1, it was an error to use an integer literal
+  in a double context.
+</aside>
+
+다음은 문자열을 숫자로 변환하거나 그 반대로 변환하는 방법을 보여준다.
+
+<?code-excerpt "misc/test/language_tour/built_in_types_test.dart (number-conversion)"?>
+{% prettify dart %}
+// String -> int
+var one = int.parse('1');
+assert(one == 1);
+
+// String -> double
+var onePointOne = double.parse('1.1');
+assert(onePointOne == 1.1);
+
+// int -> String
+String oneAsString = 1.toString();
+assert(oneAsString == '1');
+
+// double -> String
+String piAsString = 3.14159.toStringAsFixed(2);
+assert(piAsString == '3.14');
+{% endprettify %}
+
+int 타입은 전통적인 비트 쉬프트 (\<\<, \>\>)와 AND(&), 그리고 OR (|) 연산자를 명세하고 있다. 예를 들어,
+
+<?code-excerpt "misc/test/language_tour/built_in_types_test.dart (bit-shifting)"?>
+{% prettify dart %}
+assert((3 << 1) == 6); // 0011 << 1 == 0110
+assert((3 >> 1) == 1); // 0011 >> 1 == 0001
+assert((3 | 4) == 7); // 0011 | 0100 == 0111
+{% endprettify %}
+
+숫자 리터럴은 컴파일 타임 상수이다. 피연산자 숫자로 취급되는 컴파일 타임 상수인 한, 많은 산술 표현식 역시 컴파일 타임 상수가 된다.
+
+<?code-excerpt "misc/lib/language_tour/built_in_types.dart (const-num)"?>
+{% prettify dart %}
+const msPerSecond = 1000;
+const secondsUntilRetry = 5;
+const msUntilRetry = secondsUntilRetry * msPerSecond;
+{% endprettify %}
