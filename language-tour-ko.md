@@ -519,3 +519,30 @@ const validConstString = '$aConstNum $aConstBool $aConstString';
 {% endprettify %}
 
 문자열을 사용함에 있어 더 많은 정보를 보고자 한다면, [Strings and regular expressions](/guides/libraries/library-tour#strings-and-regular-expressions)을 살펴보길 바란다.
+
+
+### Booleans
+
+다트에서는 불리언 값을 나타내기 위해 `bool` 이라는 타입이 존재한다. 오직 두 객체만이 불 타입을 갖는다. 불리언 리터럴은 `true` 와 `false` 이며 두 리터럴 모두 컴파일 타임 상수이다.
+
+다트는 타입 안정성을 지원하는 언어이며, 이는 <code>if (<em>nonbooleanValue</em>)</code> or
+<code>assert (<em>nonbooleanValue</em>)</code> 와 같은 코드를 사용할 수 없다는 것을 의미한다. 대신, 다음과 같이 명시적으로 값을 체크한다.
+
+<?code-excerpt "misc/test/language_tour/built_in_types_test.dart (no-truthy)"?>
+{% prettify dart %}
+// Check for an empty string.
+var fullName = '';
+assert(fullName.isEmpty);
+
+// Check for zero.
+var hitPoints = 0;
+assert(hitPoints <= 0);
+
+// Check for null.
+var unicorn;
+assert(unicorn == null);
+
+// Check for NaN.
+var iMeantToDoThis = 0 / 0;
+assert(iMeantToDoThis.isNaN);
+{% endprettify %}
