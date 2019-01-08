@@ -426,3 +426,96 @@ const msPerSecond = 1000;
 const secondsUntilRetry = 5;
 const msUntilRetry = secondsUntilRetry * msPerSecond;
 {% endprettify %}
+
+
+### Strings
+
+다트 문자열은 UTF-16 코드 유닛의 시퀀스다. 작은 따옴표나 큰 따옴표를 사용하여 문자열을 생성할 수 있다.
+
+<?code-excerpt "misc/lib/language_tour/built_in_types.dart (quoting)"?>
+{% prettify dart %}
+var s1 = 'Single quotes work well for string literals.';
+var s2 = "Double quotes work just as well.";
+var s3 = 'It\'s easy to escape the string delimiter.';
+var s4 = "It's even easier to use the other delimiter.";
+{% endprettify %}
+
+`${`*`expression`*`}` 을 사용하면 문자열 내부에 표현식의 값을 추가할 수 있다. 표현식이 식별자라면, {} 를 생략할 수도 있다. 객체에 상응하는 문자열을 얻기 위해, 다트에서는 객체의 `toString()` 메소드를 호출한다.
+
+<?code-excerpt "misc/test/language_tour/built_in_types_test.dart (string-interpolation)"?>
+{% prettify dart %}
+var s = 'string interpolation';
+
+assert('Dart has $s, which is very handy.' ==
+    'Dart has string interpolation, ' +
+        'which is very handy.');
+assert('That deserves all caps. ' +
+        '${s.toUpperCase()} is very handy!' ==
+    'That deserves all caps. ' +
+        'STRING INTERPOLATION is very handy!');
+{% endprettify %}
+
+<div class="alert alert-info" markdown="1">
+**Note:**
+The `==` operator tests whether two objects are equivalent. Two
+strings are equivalent if they contain the same sequence of code
+units.
+</div>
+
+근접한 문자열 리터럴 또는 `+` 연산자를 사용하여 문자열을 결합 할 수도 있다.
+
+<?code-excerpt "misc/test/language_tour/built_in_types_test.dart (adjacent-string-literals)"?>
+{% prettify dart %}
+var s1 = 'String '
+    'concatenation'
+    " works even over line breaks.";
+assert(s1 ==
+    'String concatenation works even over '
+    'line breaks.');
+
+var s2 = 'The + operator ' + 'works, as well.';
+assert(s2 == 'The + operator works, as well.');
+{% endprettify %}
+
+여러 줄의 문자열을 생성하기 위한 또 다른 방법으로, 작은 따옴표 또는 큰 따옴표를 삼중으로 사용하는 방법이 있다.
+
+<?code-excerpt "misc/lib/language_tour/built_in_types.dart (triple-quotes)"?>
+{% prettify dart %}
+var s1 = '''
+You can create
+multi-line strings like this one.
+''';
+
+var s2 = """This is also a
+multi-line string.""";
+{% endprettify %}
+
+접두어로 `r` 을 추가하면 "raw" 문자열을 생성할 수 있다.
+
+<?code-excerpt "misc/lib/language_tour/built_in_types.dart (raw-strings)"?>
+{% prettify dart %}
+var s = r'In a raw string, not even \n gets special treatment.';
+{% endprettify %}
+
+문자열에서 유니코드 문자를 표현하는 방법을 자세히 알고 싶다면 [Runes](#runes) 를 살펴보도록 하자.
+
+덧붙힌 표현식이 null 또는 숫자, 문자열 혹은 불리언 값으로 평가되는 컴파일 타임 상수인 한, 문자열 리터럴은 컴파일 타임 상수가 된다.
+
+<?code-excerpt "misc/lib/language_tour/built_in_types.dart (string-literals)"?>
+{% prettify dart %}
+// These work in a const string.
+const aConstNum = 0;
+const aConstBool = true;
+const aConstString = 'a constant string';
+
+// These do NOT work in a const string.
+var aNum = 0;
+var aBool = true;
+var aString = 'a string';
+const aConstList = [1, 2, 3];
+
+const validConstString = '$aConstNum $aConstBool $aConstString';
+// const invalidConstString = '$aNum $aBool $aString $aConstList';
+{% endprettify %}
+
+문자열을 사용함에 있어 더 많은 정보를 보고자 한다면, [Strings and regular expressions](/guides/libraries/library-tour#strings-and-regular-expressions)을 살펴보길 바란다.
