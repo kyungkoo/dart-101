@@ -546,3 +546,164 @@ assert(unicorn == null);
 var iMeantToDoThis = 0 / 0;
 assert(iMeantToDoThis.isNaN);
 {% endprettify %}
+
+
+### Lists
+
+거의 모든 프로그래밍 언어에서 가장 공통적인 컬렉션은 아마도 *배열* 또는 순서를 갖는 객체 그룹일 것이다. 다트에서 배열은 [List][] 객체로, 대부분 이를 *리스트* 라 부른다.
+
+
+Dart list literals look like JavaScript array literals. Here’s a simple
+Dart list:
+
+<?code-excerpt "misc/lib/language_tour/built_in_types.dart (list-literal)"?>
+{% prettify dart %}
+var list = [1, 2, 3];
+{% endprettify %}
+
+<aside class="alert alert-info" markdown="1">
+  **Note:**
+  The analyzer infers that `list` has type `List<int>`.
+  If you try to add non-integer objects to this list,
+  the analyzer or runtime raises an error.
+  For more information, read about
+  [type inference.](/guides/language/sound-dart#type-inference)
+</aside>
+
+Lists use zero-based indexing, where 0 is the index of the first element
+and `list.length - 1` is the index of the last element. You can get a
+list’s length and refer to list elements just as you would in
+JavaScript:
+
+<?code-excerpt "misc/test/language_tour/built_in_types_test.dart (list-indexing)"?>
+{% prettify dart %}
+var list = [1, 2, 3];
+assert(list.length == 3);
+assert(list[1] == 2);
+
+list[1] = 1;
+assert(list[1] == 1);
+{% endprettify %}
+
+To create a list that's a compile-time constant,
+add `const` before the list literal:
+
+<?code-excerpt "misc/lib/language_tour/built_in_types.dart (const-list)"?>
+{% prettify dart %}
+var constantList = const [1, 2, 3];
+// constantList[1] = 1; // Uncommenting this causes an error.
+{% endprettify %}
+
+The List type has many handy methods for manipulating lists. For more
+information about lists, see [Generics](#generics) and
+[Collections](/guides/libraries/library-tour#collections).
+
+
+### Maps
+
+In general, a map is an object that associates keys and values. Both
+keys and values can be any type of object. Each *key* occurs only once,
+but you can use the same *value* multiple times. Dart support for maps
+is provided by map literals and the [Map][] type.
+
+Here are a couple of simple Dart maps, created using map literals:
+
+<?code-excerpt "misc/lib/language_tour/built_in_types.dart (map-literal)"?>
+{% prettify dart %}
+var gifts = {
+  // Key:    Value
+  'first': 'partridge',
+  'second': 'turtledoves',
+  'fifth': 'golden rings'
+};
+
+var nobleGases = {
+  2: 'helium',
+  10: 'neon',
+  18: 'argon',
+};
+{% endprettify %}
+
+<aside class="alert alert-info" markdown="1">
+  **Note:**
+  The analyzer infers that `gifts` has the type
+  `Map<String, String>` and `nobleGases` has the type
+  `Map<int, String>`. If you try to add the wrong type of value
+  to either map, the analyzer or runtime raises an error.
+  For more information, read about
+  [type inference.](/guides/language/sound-dart#type-inference)
+</aside>
+
+You can create the same objects using a Map constructor:
+
+<?code-excerpt "misc/lib/language_tour/built_in_types.dart (map-constructor)"?>
+{% prettify dart %}
+var gifts = Map();
+gifts['first'] = 'partridge';
+gifts['second'] = 'turtledoves';
+gifts['fifth'] = 'golden rings';
+
+var nobleGases = Map();
+nobleGases[2] = 'helium';
+nobleGases[10] = 'neon';
+nobleGases[18] = 'argon';
+{% endprettify %}
+
+<aside class="alert alert-info" markdown="1">
+**Note:**
+You might expect to see `new Map()` instead of just `Map()`.
+As of Dart 2, the `new` keyword is optional.
+For details, see [Using constructors](#using-constructors).
+</aside>
+
+Add a new key-value pair to an existing map just as you would in
+JavaScript:
+
+<?code-excerpt "misc/lib/language_tour/built_in_types.dart (map-add-item)"?>
+{% prettify dart %}
+var gifts = {'first': 'partridge'};
+gifts['fourth'] = 'calling birds'; // Add a key-value pair
+{% endprettify %}
+
+Retrieve a value from a map the same way you would in JavaScript:
+
+<?code-excerpt "misc/test/language_tour/built_in_types_test.dart (map-retrieve-item)"?>
+{% prettify dart %}
+var gifts = {'first': 'partridge'};
+assert(gifts['first'] == 'partridge');
+{% endprettify %}
+
+If you look for a key that isn’t in a map, you get a null in return:
+
+<?code-excerpt "misc/test/language_tour/built_in_types_test.dart (map-missing-key)"?>
+{% prettify dart %}
+var gifts = {'first': 'partridge'};
+assert(gifts['fifth'] == null);
+{% endprettify %}
+
+Use `.length` to get the number of key-value pairs in the map:
+
+<?code-excerpt "misc/test/language_tour/built_in_types_test.dart (map-length)"?>
+{% prettify dart %}
+var gifts = {'first': 'partridge'};
+gifts['fourth'] = 'calling birds';
+assert(gifts.length == 2);
+{% endprettify %}
+
+To create a map that's a compile-time constant,
+add `const` before the map literal:
+
+<?code-excerpt "misc/lib/language_tour/built_in_types.dart (const-map)"?>
+{% prettify dart %}
+final constantMap = const {
+  2: 'helium',
+  10: 'neon',
+  18: 'argon',
+};
+
+// constantMap[2] = 'Helium'; // Uncommenting this causes an error.
+{% endprettify %}
+
+For more information about maps, see
+[Generics](#generics) and
+[Maps](/guides/libraries/library-tour#maps).
