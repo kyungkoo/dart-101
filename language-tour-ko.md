@@ -426,3 +426,284 @@ const msPerSecond = 1000;
 const secondsUntilRetry = 5;
 const msUntilRetry = secondsUntilRetry * msPerSecond;
 {% endprettify %}
+
+
+### Strings
+
+다트 문자열은 UTF-16 코드 유닛의 시퀀스다. 작은 따옴표나 큰 따옴표를 사용하여 문자열을 생성할 수 있다.
+
+<?code-excerpt "misc/lib/language_tour/built_in_types.dart (quoting)"?>
+{% prettify dart %}
+var s1 = 'Single quotes work well for string literals.';
+var s2 = "Double quotes work just as well.";
+var s3 = 'It\'s easy to escape the string delimiter.';
+var s4 = "It's even easier to use the other delimiter.";
+{% endprettify %}
+
+`${`*`expression`*`}` 을 사용하면 문자열 내부에 표현식의 값을 추가할 수 있다. 표현식이 식별자라면, {} 를 생략할 수도 있다. 객체에 상응하는 문자열을 얻기 위해, 다트에서는 객체의 `toString()` 메소드를 호출한다.
+
+<?code-excerpt "misc/test/language_tour/built_in_types_test.dart (string-interpolation)"?>
+{% prettify dart %}
+var s = 'string interpolation';
+
+assert('Dart has $s, which is very handy.' ==
+    'Dart has string interpolation, ' +
+        'which is very handy.');
+assert('That deserves all caps. ' +
+        '${s.toUpperCase()} is very handy!' ==
+    'That deserves all caps. ' +
+        'STRING INTERPOLATION is very handy!');
+{% endprettify %}
+
+<div class="alert alert-info" markdown="1">
+**Note:**
+The `==` operator tests whether two objects are equivalent. Two
+strings are equivalent if they contain the same sequence of code
+units.
+</div>
+
+근접한 문자열 리터럴 또는 `+` 연산자를 사용하여 문자열을 결합 할 수도 있다.
+
+<?code-excerpt "misc/test/language_tour/built_in_types_test.dart (adjacent-string-literals)"?>
+{% prettify dart %}
+var s1 = 'String '
+    'concatenation'
+    " works even over line breaks.";
+assert(s1 ==
+    'String concatenation works even over '
+    'line breaks.');
+
+var s2 = 'The + operator ' + 'works, as well.';
+assert(s2 == 'The + operator works, as well.');
+{% endprettify %}
+
+여러 줄의 문자열을 생성하기 위한 또 다른 방법으로, 작은 따옴표 또는 큰 따옴표를 삼중으로 사용하는 방법이 있다.
+
+<?code-excerpt "misc/lib/language_tour/built_in_types.dart (triple-quotes)"?>
+{% prettify dart %}
+var s1 = '''
+You can create
+multi-line strings like this one.
+''';
+
+var s2 = """This is also a
+multi-line string.""";
+{% endprettify %}
+
+접두어로 `r` 을 추가하면 "raw" 문자열을 생성할 수 있다.
+
+<?code-excerpt "misc/lib/language_tour/built_in_types.dart (raw-strings)"?>
+{% prettify dart %}
+var s = r'In a raw string, not even \n gets special treatment.';
+{% endprettify %}
+
+문자열에서 유니코드 문자를 표현하는 방법을 자세히 알고 싶다면 [Runes](#runes) 를 살펴보도록 하자.
+
+덧붙힌 표현식이 null 또는 숫자, 문자열 혹은 불리언 값으로 평가되는 컴파일 타임 상수인 한, 문자열 리터럴은 컴파일 타임 상수가 된다.
+
+<?code-excerpt "misc/lib/language_tour/built_in_types.dart (string-literals)"?>
+{% prettify dart %}
+// These work in a const string.
+const aConstNum = 0;
+const aConstBool = true;
+const aConstString = 'a constant string';
+
+// These do NOT work in a const string.
+var aNum = 0;
+var aBool = true;
+var aString = 'a string';
+const aConstList = [1, 2, 3];
+
+const validConstString = '$aConstNum $aConstBool $aConstString';
+// const invalidConstString = '$aNum $aBool $aString $aConstList';
+{% endprettify %}
+
+문자열을 사용함에 있어 더 많은 정보를 보고자 한다면, [Strings and regular expressions](/guides/libraries/library-tour#strings-and-regular-expressions)을 살펴보길 바란다.
+
+
+### Booleans
+
+다트에서는 불리언 값을 나타내기 위해 `bool` 이라는 타입이 존재한다. 오직 두 객체만이 불 타입을 갖는다. 불리언 리터럴은 `true` 와 `false` 이며 두 리터럴 모두 컴파일 타임 상수이다.
+
+다트는 타입 안정성을 지원하는 언어이며, 이는 <code>if (<em>nonbooleanValue</em>)</code> or
+<code>assert (<em>nonbooleanValue</em>)</code> 와 같은 코드를 사용할 수 없다는 것을 의미한다. 대신, 다음과 같이 명시적으로 값을 체크한다.
+
+<?code-excerpt "misc/test/language_tour/built_in_types_test.dart (no-truthy)"?>
+{% prettify dart %}
+// Check for an empty string.
+var fullName = '';
+assert(fullName.isEmpty);
+
+// Check for zero.
+var hitPoints = 0;
+assert(hitPoints <= 0);
+
+// Check for null.
+var unicorn;
+assert(unicorn == null);
+
+// Check for NaN.
+var iMeantToDoThis = 0 / 0;
+assert(iMeantToDoThis.isNaN);
+{% endprettify %}
+
+
+### Lists
+
+거의 모든 프로그래밍 언어에서 가장 공통적인 컬렉션은 아마도 *배열* 또는 순서를 갖는 객체 그룹일 것이다. 다트에서 배열은 [List][] 객체로, 대부분 이를 *리스트* 라 부른다.
+
+
+Dart list literals look like JavaScript array literals. Here’s a simple
+Dart list:
+
+<?code-excerpt "misc/lib/language_tour/built_in_types.dart (list-literal)"?>
+{% prettify dart %}
+var list = [1, 2, 3];
+{% endprettify %}
+
+<aside class="alert alert-info" markdown="1">
+  **Note:**
+  The analyzer infers that `list` has type `List<int>`.
+  If you try to add non-integer objects to this list,
+  the analyzer or runtime raises an error.
+  For more information, read about
+  [type inference.](/guides/language/sound-dart#type-inference)
+</aside>
+
+Lists use zero-based indexing, where 0 is the index of the first element
+and `list.length - 1` is the index of the last element. You can get a
+list’s length and refer to list elements just as you would in
+JavaScript:
+
+<?code-excerpt "misc/test/language_tour/built_in_types_test.dart (list-indexing)"?>
+{% prettify dart %}
+var list = [1, 2, 3];
+assert(list.length == 3);
+assert(list[1] == 2);
+
+list[1] = 1;
+assert(list[1] == 1);
+{% endprettify %}
+
+To create a list that's a compile-time constant,
+add `const` before the list literal:
+
+<?code-excerpt "misc/lib/language_tour/built_in_types.dart (const-list)"?>
+{% prettify dart %}
+var constantList = const [1, 2, 3];
+// constantList[1] = 1; // Uncommenting this causes an error.
+{% endprettify %}
+
+The List type has many handy methods for manipulating lists. For more
+information about lists, see [Generics](#generics) and
+[Collections](/guides/libraries/library-tour#collections).
+
+
+### Maps
+
+In general, a map is an object that associates keys and values. Both
+keys and values can be any type of object. Each *key* occurs only once,
+but you can use the same *value* multiple times. Dart support for maps
+is provided by map literals and the [Map][] type.
+
+Here are a couple of simple Dart maps, created using map literals:
+
+<?code-excerpt "misc/lib/language_tour/built_in_types.dart (map-literal)"?>
+{% prettify dart %}
+var gifts = {
+  // Key:    Value
+  'first': 'partridge',
+  'second': 'turtledoves',
+  'fifth': 'golden rings'
+};
+
+var nobleGases = {
+  2: 'helium',
+  10: 'neon',
+  18: 'argon',
+};
+{% endprettify %}
+
+<aside class="alert alert-info" markdown="1">
+  **Note:**
+  The analyzer infers that `gifts` has the type
+  `Map<String, String>` and `nobleGases` has the type
+  `Map<int, String>`. If you try to add the wrong type of value
+  to either map, the analyzer or runtime raises an error.
+  For more information, read about
+  [type inference.](/guides/language/sound-dart#type-inference)
+</aside>
+
+You can create the same objects using a Map constructor:
+
+<?code-excerpt "misc/lib/language_tour/built_in_types.dart (map-constructor)"?>
+{% prettify dart %}
+var gifts = Map();
+gifts['first'] = 'partridge';
+gifts['second'] = 'turtledoves';
+gifts['fifth'] = 'golden rings';
+
+var nobleGases = Map();
+nobleGases[2] = 'helium';
+nobleGases[10] = 'neon';
+nobleGases[18] = 'argon';
+{% endprettify %}
+
+<aside class="alert alert-info" markdown="1">
+**Note:**
+You might expect to see `new Map()` instead of just `Map()`.
+As of Dart 2, the `new` keyword is optional.
+For details, see [Using constructors](#using-constructors).
+</aside>
+
+Add a new key-value pair to an existing map just as you would in
+JavaScript:
+
+<?code-excerpt "misc/lib/language_tour/built_in_types.dart (map-add-item)"?>
+{% prettify dart %}
+var gifts = {'first': 'partridge'};
+gifts['fourth'] = 'calling birds'; // Add a key-value pair
+{% endprettify %}
+
+Retrieve a value from a map the same way you would in JavaScript:
+
+<?code-excerpt "misc/test/language_tour/built_in_types_test.dart (map-retrieve-item)"?>
+{% prettify dart %}
+var gifts = {'first': 'partridge'};
+assert(gifts['first'] == 'partridge');
+{% endprettify %}
+
+If you look for a key that isn’t in a map, you get a null in return:
+
+<?code-excerpt "misc/test/language_tour/built_in_types_test.dart (map-missing-key)"?>
+{% prettify dart %}
+var gifts = {'first': 'partridge'};
+assert(gifts['fifth'] == null);
+{% endprettify %}
+
+Use `.length` to get the number of key-value pairs in the map:
+
+<?code-excerpt "misc/test/language_tour/built_in_types_test.dart (map-length)"?>
+{% prettify dart %}
+var gifts = {'first': 'partridge'};
+gifts['fourth'] = 'calling birds';
+assert(gifts.length == 2);
+{% endprettify %}
+
+To create a map that's a compile-time constant,
+add `const` before the map literal:
+
+<?code-excerpt "misc/lib/language_tour/built_in_types.dart (const-map)"?>
+{% prettify dart %}
+final constantMap = const {
+  2: 'helium',
+  10: 'neon',
+  18: 'argon',
+};
+
+// constantMap[2] = 'Helium'; // Uncommenting this causes an error.
+{% endprettify %}
+
+For more information about maps, see
+[Generics](#generics) and
+[Maps](/guides/libraries/library-tour#maps).
